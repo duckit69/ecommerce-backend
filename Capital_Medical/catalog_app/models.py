@@ -11,8 +11,13 @@ class Category(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        related_name='children'
+        related_name='sub_categories'
         )
+    manager = models.ForeignKey(
+        'user_app.User',
+        on_delete=models.CASCADE,
+        related_name='managed_categories'
+    )
     
     def __str__(self):
-        return f"Category: {self.name}, Slug: {self.slug}, Status: {self.active_flag}"
+        return f"Category: {self.name}, Slug: {self.slug}, Status: {self.active_flag}, Manager: {self.manager}"
