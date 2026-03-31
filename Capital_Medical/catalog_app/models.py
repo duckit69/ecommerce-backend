@@ -14,7 +14,7 @@ class Category(models.Model):
         related_name='sub_categories'
         )
     manager = models.ForeignKey(
-        'user_app.User',
+        'auth.User',
         on_delete=models.CASCADE,
         related_name='managed_categories'
     )

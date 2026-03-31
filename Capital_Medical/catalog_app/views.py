@@ -2,6 +2,7 @@ from catalog_app.models import Category
 from catalog_app.serializers import CategorySerializer
 
 from rest_framework import generics
+from rest_framework import permissions
 
 class CategoryList(generics.ListCreateAPIView):
     """
@@ -10,6 +11,10 @@ class CategoryList(generics.ListCreateAPIView):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    
+    def perform_create(self, serializer):
+        serializer.save(manager=self.request.user)
     
     
 class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -18,4 +23,5 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     

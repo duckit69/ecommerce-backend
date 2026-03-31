@@ -7,11 +7,11 @@ from rest_framework import serializers
 from catalog_app.models import Category
 
 class UserSerializer(serializers.ModelSerializer):
-    categories = serializers.PrimaryKeyRelatedField(
+    managed_categories = serializers.PrimaryKeyRelatedField(
         many = True,
         queryset = Category.objects.all()
     )
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'categories']
+        fields = ['id', 'username', 'managed_categories']
