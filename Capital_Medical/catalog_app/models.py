@@ -15,4 +15,4 @@ class Category(models.Model):
         )
     
     def __str__(self):
-        return f"The category name is {self.name}, slug: {self.slug}, status: {self.active_flag}"
+        return f"Category: {self.name}, Slug: {self.slug}, Status: {self.active_flag}"
