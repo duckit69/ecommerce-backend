@@ -22,3 +22,8 @@ urlpatterns = [
     path('categories/', include('catalog_app.urls')),
     path('users/', include('user_app.urls')),
 ]
+
+#Browsable API To be deleted in prod
+urlpatterns += [
+    path("api-auth/", include("rest_framework.urls")),
+]

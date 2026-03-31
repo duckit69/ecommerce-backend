@@ -4,6 +4,7 @@ from catalog_app.serializers import CategorySerializer
 from rest_framework import generics
 from rest_framework import permissions
 
+from catalog_app.permissions import IsOwnerOrReadOnly
 class CategoryList(generics.ListCreateAPIView):
     """
     GET all categories / POST category
@@ -23,5 +24,5 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     
