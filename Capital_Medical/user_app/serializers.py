@@ -2,16 +2,13 @@ from django.contrib.auth.models import User
 
 from rest_framework import serializers
 
-
-#import Category Model
-from catalog_app.models import Category
-
-class UserSerializer(serializers.ModelSerializer):
-    managed_categories = serializers.PrimaryKeyRelatedField(
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    managed_categories = serializers.HyperlinkedRelatedField(
         many = True,
-        queryset = Category.objects.all()
+        view_name = 'category-detail',
+        read_only = True
     )
     
     class Meta:
         model = User
-        fields = ['id', 'username', 'managed_categories']
+        fields = ['url', 'id', 'username', 'managed_categories']

@@ -1,15 +1,13 @@
 from django.contrib.auth.models import User
-
-from rest_framework import generics
+from rest_framework import viewsets
+from rest_framework import permissions
 
 from user_app.serializers import UserSerializer
 
-class UserList(generics.ListAPIView):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     
-
-class UserDetail(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    
+    def perform_create(self, serializer):
+        serializer.save(manager=self.request.user)
