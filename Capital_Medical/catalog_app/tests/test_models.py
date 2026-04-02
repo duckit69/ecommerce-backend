@@ -1,7 +1,15 @@
+"""
+When Testing Models:
+    1- Test Data base Constraints.
+    2- Busseniss logic (djagno auto test the charfield etc...).
+"""
+
 from django.test import TestCase
-from catalog_app.models import Category
+from catalog_app.models import Category, Product
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError, PermissionDenied
+from decimal import Decimal
+from django.utils import timezone
 
 # Create your tests here.
 
@@ -87,5 +95,65 @@ class CategoryModelTest(TestCase):
                 manager=self.manager
             )
 
+
+class ProductModelTest(TestCase):
+    def setUp(self):
+        self.manager = User.objects.create_user(
+            username='testuser',
+            password='testuser',
+            is_staff=True
+        )
         
-        
+        self.category = Category.objects.create(
+                name='testCategory',
+                slug='testSlug',
+                description='testDescription',
+                manager=self.manager
+            )      
+    
+    def test_create_product(self):
+        """
+        Test if Product creation is valid
+        """
+        product = {
+            "name": "testProductName",
+            "slug": "testProductSlug",
+            "description": "testProductDescription",
+            "price": Decimal("10.55"),
+            "stock_qty": 55,
+            "category": self.category,
+            "created_by": self.manager,
+        }
+        Product.objects.create(**product)
+        self.assertEqual(Product.objects.count(), 1)
+    
+    def test_create_product_with_zero_or_negative_price(self):
+        """
+        Test if Product's price can be 0 or negative
+        """
+        # check with 0 value
+        product1 = {
+            "name": "testProductName",
+            "slug": "testProductSlug",
+            "description": "testProductDescription",
+            "price": Decimal("0"),
+            "stock_qty": 55,
+            "category": self.category,
+            "created_by": self.manager,
+        }
+        product2 = {
+            "name": "testProductName2",
+            "slug": "testProductSlug2",
+            "description": "testProductDescription",
+            "price": Decimal("-22"),
+            "stock_qty": 55,
+            "category": self.category,
+            "created_by": self.manager,
+        }
+        # Test for 0
+        with self.assertRaises(ValidationError):
+            Product.objects.create(**product1)
+        # Test for negative
+        with self.assertRaises(ValidationError):
+            Product.objects.create(**product2)
+            
