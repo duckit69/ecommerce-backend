@@ -1,5 +1,5 @@
-from catalog_app.models import Category
-from catalog_app.serializers import CategorySerializer
+from catalog_app.models import Category, Product
+from catalog_app.serializers import CategorySerializer, ProductSerializer
 
 from rest_framework import permissions
 from rest_framework import viewsets
@@ -14,3 +14,10 @@ class CategoryViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(manager=self.request.user)
 
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
+    

@@ -5,7 +5,8 @@ from catalog_app import views
 
 router = DefaultRouter()
 
-router.register(r'', views.CategoryViewSet, basename='category')
+router.register(r'categories', views.CategoryViewSet, basename='category')
+router.register(r'products', views.ProductViewSet, basename='product')
 
 urlpatterns = [
     path("", include(router.urls)),

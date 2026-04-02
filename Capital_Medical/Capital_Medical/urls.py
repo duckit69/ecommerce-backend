@@ -20,10 +20,10 @@ from django.urls import include, path
 from Capital_Medical import views
 
 urlpatterns = [
+    path('', views.api_root),
     path('admin/', admin.site.urls),
-    path('categories/', include('catalog_app.urls')),
+    path('catalog/', include('catalog_app.urls')),
     path('users/', include('user_app.urls')),
-    path('', views.api_root)
 ]
 
 #Browsable API To be deleted in prod

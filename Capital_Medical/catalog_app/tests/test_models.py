@@ -120,6 +120,7 @@ class ProductModelTest(TestCase):
             "slug": "testProductSlug",
             "description": "testProductDescription",
             "price": Decimal("10.55"),
+            "brand": "brand",
             "stock_qty": 55,
             "category": self.category,
             "created_by": self.manager,
@@ -137,6 +138,7 @@ class ProductModelTest(TestCase):
             "slug": "testProductSlug",
             "description": "testProductDescription",
             "price": Decimal("0"),
+            "brand": "brand1",
             "stock_qty": 55,
             "category": self.category,
             "created_by": self.manager,
@@ -146,6 +148,7 @@ class ProductModelTest(TestCase):
             "slug": "testProductSlug2",
             "description": "testProductDescription",
             "price": Decimal("-22"),
+            "brand": "brand2",
             "stock_qty": 55,
             "category": self.category,
             "created_by": self.manager,
@@ -157,3 +160,33 @@ class ProductModelTest(TestCase):
         with self.assertRaises(ValidationError):
             Product.objects.create(**product2)
             
+    def test_create_product_with_lte_stock_qty(self):
+        """
+        Test if Product creation is valid with stock <= 0
+        """
+        product1 = {
+            "name": "testProductName",
+            "slug": "testProductSlug",
+            "description": "testProductDescription",
+            "price": Decimal("10.55"),
+            "brand": "brand",
+            "stock_qty": 0,
+            "category": self.category,
+            "created_by": self.manager,
+        }
+        product2 = {
+            "name": "testProductName",
+            "slug": "testProductSlug",
+            "description": "testProductDescription",
+            "price": Decimal("10.55"),
+            "brand": "brand",
+            "stock_qty": -22,
+            "category": self.category,
+            "created_by": self.manager,
+        }
+        # Test for 0
+        with self.assertRaises(ValidationError):
+            Product.objects.create(**product1)
+        # Test for negative
+        with self.assertRaises(ValidationError):
+            Product.objects.create(**product2)

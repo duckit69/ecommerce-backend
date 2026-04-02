@@ -14,7 +14,7 @@ class Category(models.Model):
         blank=True,
         related_name='sub_categories'
         )
-    manager = models.ForeignKey(
+    created_by = models.ForeignKey(
         'auth.User',
         on_delete=models.PROTECT,
         related_name='managed_categories'
@@ -40,7 +40,8 @@ class Product(models.Model):
     slug = models.CharField(max_length=100, unique=True)
     description = models.TextField()
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    sku = models.CharField(max_length=100, unique=True)
+    brand = models.CharField(max_length=100)
+    sku = models.CharField(max_length=100, unique=True, editable=False)
     stock_qty = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -55,13 +56,14 @@ class Product(models.Model):
         on_delete=models.PROTECT
     )
     
-    
     def generate_sku(self):
-        self.sku = f"{self.category.slug.lower()}-{self.name.lower()}"
+        self.sku = f"{self.category.name.lower()}-{self.brand.lower()}-{self.name.lower()}"
         
     def clean(self):
         if not self.price > 0:
             raise ValidationError('Price must be positive')
+        if not self.stock_qty > 0:
+            raise ValidationError('Stock QTY must be positive')
     
     def save(self, *args, **kwargs):
         self.generate_sku()

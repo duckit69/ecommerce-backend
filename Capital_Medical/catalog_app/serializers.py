@@ -1,11 +1,13 @@
 from rest_framework import serializers
-from catalog_app.models import Category
+from catalog_app.models import Category, Product
 
-class CategorySerializer(serializers.HyperlinkedModelSerializer):
-    manager = serializers.HyperlinkedRelatedField(
-        view_name='user-detail',
-        read_only=True
-    )
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
         fields = '__all__'
