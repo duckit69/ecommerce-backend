@@ -6,7 +6,7 @@ class Category(models.Model):
     name = models.CharField(max_length=50)
     slug = models.CharField(max_length=50, unique=True)
     description = models.TextField()
-    active_flag = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
     parent_category = models.ForeignKey(
         'self', 
         on_delete=models.PROTECT,
@@ -23,7 +23,7 @@ class Category(models.Model):
     def clean(self):
         if self.parent_category == self:
             raise ValidationError('A category cannot be its own parent')
-        if not self.manager.is_staff:
+        if not self.created_by.is_staff:
             raise PermissionDenied('Only staff users can create categories')
     
     def save(self, *args, **kwargs):
@@ -31,7 +31,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
     def __str__(self):
-        return f"Category: {self.name}, Slug: {self.slug}, Status: {self.active_flag}, Manager: {self.manager}"
+        return f"Category: {self.name}, Slug: {self.slug}, Status: {self.is_active}, Manager: {self.created_by}"
     
 
 
@@ -53,12 +53,16 @@ class Product(models.Model):
     )
     created_by = models.ForeignKey(
         'auth.User',
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        related_name='created_products'
     )
     
     def generate_sku(self):
         self.sku = f"{self.category.name.lower()}-{self.brand.lower()}-{self.name.lower()}"
-        
+    
+    def __str__(self):
+        return f"Product: {self.name}, Slug: {self.slug}, Status: {self.is_active}, Created by: {self.created_by}"
+    
     def clean(self):
         if not self.price > 0:
             raise ValidationError('Price must be positive')
