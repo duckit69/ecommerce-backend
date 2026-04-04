@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from catalog_app.models import Category, Product
+from catalog_app.models import Category, Product, ProductImage
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,3 +13,10 @@ class ProductSerializer(serializers.ModelSerializer):
         model=Product
         fields='__all__'
         read_only_fields=['created_by', 'sku', 'created_at', 'updated_at']
+    
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=ProductImage
+        fields='__all__'
+        read_only_fields=['created_at']
