@@ -15,8 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
+
+from Capital_Medical import views
 
 urlpatterns = [
+    path('', views.api_root),
     path('admin/', admin.site.urls),
+    path('catalog/', include('catalog_app.urls')),
+    path('users/', include('user_app.urls')),
+]
+
+#Browsable API To be deleted in prod
+urlpatterns += [
+    path("api-auth/", include("rest_framework.urls")),
 ]
