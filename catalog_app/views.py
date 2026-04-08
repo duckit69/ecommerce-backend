@@ -23,5 +23,5 @@ class ProductViewSet(viewsets.ModelViewSet):
         serializer.save(created_by=self.request.user)
 
 class ProductImageViewSet(viewsets.ModelViewSet):
-    queryset = ProductImage.all()
+    queryset = ProductImage.objects.all()
     serializer_class = ProductImageSerializer
